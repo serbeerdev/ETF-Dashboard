@@ -62,9 +62,9 @@ export default async function EtfPage({
 
         {/* Business Summary */}
         {info.summaryProfile.longBusinessSummary && (
-          <div className="border rounded-lg p-6 bg-white">
+          <div className="border rounded-lg p-6 bg-white dark:bg-gray-800 dark:border-gray-700">
             <h2 className="text-xl font-semibold mb-3">About {symbol}</h2>
-            <p className="text-gray-600 leading-relaxed">
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
               {info.summaryProfile.longBusinessSummary}
             </p>
             {info.summaryProfile.website && (
@@ -72,7 +72,7 @@ export default async function EtfPage({
                 href={info.summaryProfile.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block mt-4 text-blue-600 hover:underline"
+                className="inline-block mt-4 text-blue-600 dark:text-blue-400 hover:underline"
               >
                 Visit website →
               </a>

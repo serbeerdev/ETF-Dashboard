@@ -25,9 +25,9 @@ async function FeaturedEtfs() {
     );
   } catch (error) {
     return (
-      <div className="p-8 text-center border rounded-lg bg-red-50">
-        <p className="text-red-900 font-medium">Failed to load featured ETFs</p>
-        <p className="text-sm text-gray-600 mt-2">
+      <div className="p-8 text-center border rounded-lg bg-red-50 dark:bg-red-900/20">
+        <p className="text-red-900 dark:text-red-100 font-medium">Failed to load featured ETFs</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
           Make sure the FetchETF backend is running at http://localhost:3000
         </p>
       </div>
@@ -40,7 +40,7 @@ export default function HomePage() {
     <div className="container mx-auto py-6 space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Featured ETFs</h1>
-        <p className="text-gray-600 mt-2">
+        <p className="text-gray-600 dark:text-gray-400 mt-2">
           Explore popular and top-performing Exchange Traded Funds
         </p>
       </div>

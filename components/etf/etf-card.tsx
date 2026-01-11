@@ -16,15 +16,15 @@ export function EtfCard({ etf }: { etf: EtfQuote }) {
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
               <h3 className="text-lg font-bold truncate">{etf.symbol}</h3>
-              <p className="text-sm text-gray-500 truncate">{transformed.name}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{transformed.name}</p>
             </div>
             <PriceBadge change={transformed.changePercent} />
           </div>
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">${transformed.price.toFixed(2)}</div>
-          <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
-            <span className={transformed.change >= 0 ? "text-green-600" : "text-red-600"}>
+          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mt-1">
+            <span className={transformed.change >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}>
               {transformed.change >= 0 ? "+" : ""}{transformed.change.toFixed(2)}
             </span>
             <span>•</span>

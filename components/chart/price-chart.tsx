@@ -54,12 +54,17 @@ export function PriceChart({
                 <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
                 <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
               </linearGradient>
+              <linearGradient id="colorGradientDark" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#60a5fa" stopOpacity={0} />
+              </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="dark:stroke-gray-700" />
             <XAxis
               dataKey="dateStr"
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 12, fill: "#6b7280" }}
               stroke="#6b7280"
+              className="dark:stroke-gray-400"
               tickFormatter={(value) => {
                 // Simplify date display on small screens
                 const date = new Date(value);
@@ -68,8 +73,9 @@ export function PriceChart({
             />
             <YAxis
               domain={[minPrice, maxPrice]}
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 12, fill: "#6b7280" }}
               stroke="#6b7280"
+              className="dark:stroke-gray-400"
               tickFormatter={(value) => `$${value.toFixed(0)}`}
             />
             <Tooltip content={<CustomTooltip />} cursor={{ stroke: "#3b82f6", strokeWidth: 1 }} />
@@ -78,6 +84,7 @@ export function PriceChart({
               dataKey="close"
               stroke="#3b82f6"
               fill="url(#colorGradient)"
+              className="dark:stroke-blue-400 dark:fill-[url(#colorGradientDark)]"
               strokeWidth={2}
             />
           </AreaChart>
@@ -93,28 +100,28 @@ function CustomTooltip({ active, payload }: TooltipProps<any, any>) {
   const data = payload[0].payload;
 
   return (
-    <div className="bg-white border rounded-lg p-3 shadow-lg">
-      <p className="text-sm font-medium text-gray-900">{data.dateStr}</p>
+    <div className="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg p-3 shadow-lg">
+      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{data.dateStr}</p>
       <div className="mt-2 space-y-1">
         <div className="flex justify-between gap-4 text-sm">
-          <span className="text-gray-500">Open:</span>
-          <span className="font-medium">${data.open?.toFixed(2)}</span>
+          <span className="text-gray-500 dark:text-gray-400">Open:</span>
+          <span className="font-medium text-gray-900 dark:text-gray-100">${data.open?.toFixed(2)}</span>
         </div>
         <div className="flex justify-between gap-4 text-sm">
-          <span className="text-gray-500">High:</span>
-          <span className="font-medium text-green-600">${data.high?.toFixed(2)}</span>
+          <span className="text-gray-500 dark:text-gray-400">High:</span>
+          <span className="font-medium text-green-600 dark:text-green-400">${data.high?.toFixed(2)}</span>
         </div>
         <div className="flex justify-between gap-4 text-sm">
-          <span className="text-gray-500">Low:</span>
-          <span className="font-medium text-red-600">${data.low?.toFixed(2)}</span>
+          <span className="text-gray-500 dark:text-gray-400">Low:</span>
+          <span className="font-medium text-red-600 dark:text-red-400">${data.low?.toFixed(2)}</span>
         </div>
         <div className="flex justify-between gap-4 text-sm">
-          <span className="text-gray-500">Close:</span>
-          <span className="font-medium">${data.close?.toFixed(2)}</span>
+          <span className="text-gray-500 dark:text-gray-400">Close:</span>
+          <span className="font-medium text-gray-900 dark:text-gray-100">${data.close?.toFixed(2)}</span>
         </div>
         <div className="flex justify-between gap-4 text-sm">
-          <span className="text-gray-500">Volume:</span>
-          <span className="font-medium">{(data.volume / 1000000).toFixed(2)}M</span>
+          <span className="text-gray-500 dark:text-gray-400">Volume:</span>
+          <span className="font-medium text-gray-900 dark:text-gray-100">{(data.volume / 1000000).toFixed(2)}M</span>
         </div>
       </div>
     </div>

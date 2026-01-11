@@ -8,7 +8,7 @@ export default function DashboardLayout({
 }) {
   return (
     <Providers>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
         <Navbar />
         <main>{children}</main>
       </div>

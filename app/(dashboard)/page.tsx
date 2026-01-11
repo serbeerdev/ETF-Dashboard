@@ -1,0 +1,51 @@
+import { etfApi } from "@/lib/api/etf-api";
+import { EtfCard } from "@/components/etf/etf-card";
+import { Skeleton } from "@/components/ui/skeleton";
+
+function EtfGridSkeleton() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <Skeleton key={i} className="h-40" />
+      ))}
+    </div>
+  );
+}
+
+async function FeaturedEtfs() {
+  try {
+    const etfs = await etfApi.getFeaturedEtfs();
+
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {etfs.map((etf) => (
+          <EtfCard key={etf.symbol} etf={etf} />
+        ))}
+      </div>
+    );
+  } catch (error) {
+    return (
+      <div className="p-8 text-center border rounded-lg bg-red-50">
+        <p className="text-red-900 font-medium">Failed to load featured ETFs</p>
+        <p className="text-sm text-gray-600 mt-2">
+          Make sure the FetchETF backend is running at http://localhost:3000
+        </p>
+      </div>
+    );
+  }
+}
+
+export default function HomePage() {
+  return (
+    <div className="container mx-auto py-6 space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold">Featured ETFs</h1>
+        <p className="text-gray-600 mt-2">
+          Explore popular and top-performing Exchange Traded Funds
+        </p>
+      </div>
+
+      <FeaturedEtfs />
+    </div>
+  );
+}

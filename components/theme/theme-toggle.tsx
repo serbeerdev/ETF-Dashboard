@@ -15,19 +15,22 @@ export function ThemeToggle() {
   }, [])
 
   if (!mounted) {
-    return (
-      <Button variant="ghost" size="icon" className="h-9 w-9">
-        <Sun className="h-4 w-4" />
-      </Button>
-    )
+    return null
+  }
+
+  const toggleTheme = () => {
+    const newTheme = theme === "dark" ? "light" : "dark"
+    console.log("Toggling theme from", theme, "to", newTheme)
+    setTheme(newTheme)
   }
 
   return (
     <Button
       variant="ghost"
       size="icon"
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      onClick={toggleTheme}
       className="h-9 w-9"
+      aria-label="Toggle theme"
     >
       {theme === "dark" ? (
         <Sun className="h-4 w-4" />

@@ -15,14 +15,25 @@ import type {
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 class EtfApiService {
-  private baseUrl: string;
+  private backendUrl: string;
 
   constructor() {
-    this.baseUrl = API_BASE_URL;
+    this.backendUrl = API_BASE_URL;
   }
 
   private async fetch<T>(endpoint: string): Promise<T> {
-    const url = `${this.baseUrl}${endpoint}`;
+    // Server components use backend directly, client uses backend too (via API routes proxy)
+    // But we need to check if we're in a server component context
+    const isServer = typeof window === "undefined";
+
+    let url: string;
+    if (isServer) {
+      // Server component: call backend directly
+      url = `${this.backendUrl}${endpoint}`;
+    } else {
+      // Client component: use Next.js API routes as proxy (avoid CORS)
+      url = `/api${endpoint}`;
+    }
 
     try {
       const response = await fetch(url, {

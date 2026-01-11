@@ -24,15 +24,20 @@ export function PriceChart({
   title?: string;
 }) {
   const chartData = useMemo(() => {
-    return data.quotes.map((quote) => ({
-      date: new Date(quote.date),
-      dateStr: new Date(quote.date).toLocaleDateString(),
-      close: quote.close,
-      open: quote.open,
-      high: quote.high,
-      low: quote.low,
-      volume: quote.volume,
-    }));
+    return data.quotes
+      .filter((quote) => quote.date && !isNaN(new Date(quote.date).getTime()))
+      .map((quote) => {
+        const dateObj = new Date(quote.date);
+        return {
+          date: dateObj,
+          dateStr: !isNaN(dateObj.getTime()) ? dateObj.toLocaleDateString() : 'N/A',
+          close: quote.close,
+          open: quote.open,
+          high: quote.high,
+          low: quote.low,
+          volume: quote.volume,
+        };
+      });
   }, [data]);
 
   const minPrice = Math.min(...chartData.map((d) => d.low)) * 0.999;
@@ -60,14 +65,15 @@ export function PriceChart({
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="dark:stroke-gray-700" />
             <XAxis
-              dataKey="dateStr"
+              dataKey="date"
               tick={{ fontSize: 12, fill: "#6b7280" }}
               stroke="#6b7280"
               className="dark:stroke-gray-400"
               tickFormatter={(value) => {
-                // Simplify date display on small screens
-                const date = new Date(value);
-                return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+                if (value instanceof Date && !isNaN(value.getTime())) {
+                  return value.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+                }
+                return "";
               }}
             />
             <YAxis

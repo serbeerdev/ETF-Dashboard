@@ -34,21 +34,69 @@ export function IntervalSelector({
   );
 }
 
+// Calculate from/to dates based on interval
+function calculateDateRange(interval: Interval): { from: string; to: string } {
+  const to = new Date();
+  const from = new Date();
+
+  switch (interval) {
+    case "1D":
+      from.setDate(to.getDate() - 1);
+      break;
+    case "1W":
+      from.setDate(to.getDate() - 7);
+      break;
+    case "1M":
+      from.setMonth(to.getMonth() - 1);
+      break;
+    case "3M":
+      from.setMonth(to.getMonth() - 3);
+      break;
+    case "6M":
+      from.setMonth(to.getMonth() - 6);
+      break;
+    case "1Y":
+      from.setFullYear(to.getFullYear() - 1);
+      break;
+    case "5Y":
+      from.setFullYear(to.getFullYear() - 5);
+      break;
+    case "MAX":
+      from.setFullYear(2015, 0, 1); // Start from 2015
+      break;
+  }
+
+  // Format as YYYY-MM-DD
+  const formatDate = (date: Date) => date.toISOString().split('T')[0];
+
+  return {
+    from: formatDate(from),
+    to: formatDate(to),
+  };
+}
+
 // Map interval to API params
 export function mapIntervalToParams(interval: Interval): {
-  range?: string;
+  from?: string;
+  to?: string;
   interval?: string;
 } {
-  const map: Record<Interval, any> = {
-    "1D": { range: "1d", interval: "1m" },
-    "1W": { range: "5d", interval: "5d" },
-    "1M": { range: "1mo", interval: "1d" },
-    "3M": { range: "3mo", interval: "1wk" },
-    "6M": { range: "6mo", interval: "1wk" },
-    "1Y": { range: "1y", interval: "1mo" },
-    "5Y": { range: "5y", interval: "1mo" },
-    "MAX": { range: "max", interval: "3mo" },
+  const intervalMap: Record<Interval, string> = {
+    "1D": "1m",
+    "1W": "5d",
+    "1M": "1d",
+    "3M": "1wk",
+    "6M": "1wk",
+    "1Y": "1mo",
+    "5Y": "1mo",
+    "MAX": "1wk",
   };
 
-  return map[interval];
+  const { from, to } = calculateDateRange(interval);
+
+  return {
+    from,
+    to,
+    interval: intervalMap[interval],
+  };
 }

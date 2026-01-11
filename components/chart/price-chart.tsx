@@ -24,15 +24,14 @@ export function PriceChart({
   title?: string;
 }) {
   const chartData = useMemo(() => {
-    const quotes = data.indicators.quote[0];
-    return data.timestamps.map((timestamp, index) => ({
-      date: new Date(timestamp * 1000),
-      dateStr: new Date(timestamp * 1000).toLocaleDateString(),
-      close: quotes.close[index],
-      open: quotes.open[index],
-      high: quotes.high[index],
-      low: quotes.low[index],
-      volume: quotes.volume[index],
+    return data.quotes.map((quote) => ({
+      date: new Date(quote.date),
+      dateStr: new Date(quote.date).toLocaleDateString(),
+      close: quote.close,
+      open: quote.open,
+      high: quote.high,
+      low: quote.low,
+      volume: quote.volume,
     }));
   }, [data]);
 

@@ -68,6 +68,17 @@ export interface EtfInfo {
   price: EtfQuote;
 }
 
+// Quote data point in history
+export interface HistoryQuote {
+  date: string; // ISO date string
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+  adjclose?: number;
+}
+
 // History Data
 export interface HistoryData {
   meta: {
@@ -79,19 +90,7 @@ export interface HistoryData {
     dataGranularity: string;
     range: string;
   };
-  timestamps: number[];
-  indicators: {
-    quote: Array<{
-      open: number[];
-      high: number[];
-      low: number[];
-      close: number[];
-      volume: number[];
-    }>;
-    adjclose?: Array<{
-      adjclose: number[];
-    }>;
-  };
+  quotes: HistoryQuote[];
 }
 
 // Holdings

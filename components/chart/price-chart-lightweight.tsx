@@ -130,10 +130,17 @@ export function PriceChartLightweight({
         return currentDay === prevDay;
       });
 
-    // Limit to last 400 points for intraday data to avoid overcrowding
-    if (isIntraday && chartData.length > 400) {
+    // Calculate average time gap between points to detect granularity
+    const avgTimeGap = chartData.length > 1
+      ? (chartData[chartData.length - 1].time - chartData[0].time) / (chartData.length - 1)
+      : 0;
+
+    // Limit to last 400 points only for high-frequency intraday data (< 15min intervals)
+    // Hourly data (1h) should not be limited as it provides good granularity without overcrowding
+    const isHighFrequencyData = isIntraday && avgTimeGap < 900; // Less than 15 minutes
+    if (isHighFrequencyData && chartData.length > 400) {
       chartData = chartData.slice(-400);
-      console.log('Lightweight Charts - Limited to last 400 points');
+      console.log('Lightweight Charts - Limited to last 400 points (high-frequency data)');
     }
 
     console.log('Lightweight Charts - Data points:', chartData.length, 'First time:', chartData[0]?.time, 'Last time:', chartData[chartData.length - 1]?.time);

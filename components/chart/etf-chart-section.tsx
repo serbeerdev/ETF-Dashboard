@@ -15,8 +15,8 @@ interface EtfChartSectionProps {
 export function EtfChartSection({ symbol }: EtfChartSectionProps) {
   const [interval, setInterval] = useState<Interval>("1M");
 
-  // 1D uses intraday API, 1W with "1h" interval also uses intraday API
-  const isIntraday = interval === "1D" || interval === "1W";
+  // 1D, 1W, 1M use intraday API (1h for 1W and 1M)
+  const isIntraday = interval === "1D" || interval === "1W" || interval === "1M";
   const params = mapIntervalToParams(interval);
 
   const { data, isLoading, error } = isIntraday

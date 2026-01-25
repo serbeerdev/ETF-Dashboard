@@ -24,7 +24,7 @@ export function PriceChart({
   title?: string;
 }) {
   const chartData = useMemo(() => {
-    return data.quotes
+    let quotes = data.quotes
       .filter((quote) => quote.date && !isNaN(new Date(quote.date).getTime()))
       .map((quote) => {
         const dateObj = new Date(quote.date);
@@ -38,6 +38,22 @@ export function PriceChart({
           volume: quote.volume,
         };
       });
+
+    // Limit to last 400 points for intraday data to avoid overcrowding
+    const isIntraday = quotes.length > 1 &&
+      quotes.some((point, idx) => {
+        if (idx === 0) return false;
+        const prevDate = quotes[idx - 1].date;
+        const currDate = point.date;
+        return prevDate.toDateString() === currDate.toDateString() &&
+               prevDate.getTime() !== currDate.getTime();
+      });
+
+    if (isIntraday && quotes.length > 400) {
+      quotes = quotes.slice(-400);
+    }
+
+    return quotes;
   }, [data]);
 
   // Detect if data is intraday by checking if timestamps vary within the same day

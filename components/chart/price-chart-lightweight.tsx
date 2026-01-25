@@ -105,7 +105,7 @@ export function PriceChartLightweight({
     }
 
     // Filter and transform data
-    const chartData = data.quotes
+    let chartData = data.quotes
       .filter((quote) => {
         const date = new Date(quote.date);
         return !isNaN(date.getTime());
@@ -119,6 +119,13 @@ export function PriceChartLightweight({
         };
       })
       .sort((a, b) => a.time - b.time);
+
+    // Limit to last 400 points for intraday data to avoid overcrowding
+    const isIntraday = chartData.length > 0 && chartData[0].time % 86400 !== 0;
+    if (isIntraday && chartData.length > 400) {
+      chartData = chartData.slice(-400);
+      console.log('Lightweight Charts - Limited to last 400 points');
+    }
 
     console.log('Lightweight Charts - Data points:', chartData.length, 'First time:', chartData[0]?.time, 'Last time:', chartData[chartData.length - 1]?.time);
 

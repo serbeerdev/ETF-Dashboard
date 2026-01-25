@@ -120,8 +120,17 @@ export function PriceChartLightweight({
       })
       .sort((a, b) => a.time - b.time);
 
+    // Detect if this is intraday data by checking if any points are on the same day
+    const isIntraday = chartData.length > 1 &&
+      chartData.some((point, idx) => {
+        if (idx === 0) return false;
+        // Check if current and previous points are on the same calendar day
+        const currentDay = Math.floor(point.time / 86400);
+        const prevDay = Math.floor(chartData[idx - 1].time / 86400);
+        return currentDay === prevDay;
+      });
+
     // Limit to last 400 points for intraday data to avoid overcrowding
-    const isIntraday = chartData.length > 0 && chartData[0].time % 86400 !== 0;
     if (isIntraday && chartData.length > 400) {
       chartData = chartData.slice(-400);
       console.log('Lightweight Charts - Limited to last 400 points');
@@ -153,8 +162,14 @@ export function PriceChartLightweight({
     // Final check before operations
     if (!chartRef.current || !isChartReadyRef.current) return;
 
-    // Determine if this is intraday data
-    const isIntraday = chartData.length > 0 && chartData[0].time % 86400 !== 0;
+    // Determine if this is intraday data (same logic as before, re-calculated for clarity)
+    const isIntraday = chartData.length > 1 &&
+      chartData.some((point, idx) => {
+        if (idx === 0) return false;
+        const currentDay = Math.floor(point.time / 86400);
+        const prevDay = Math.floor(chartData[idx - 1].time / 86400);
+        return currentDay === prevDay;
+      });
 
     console.log('Lightweight Charts - Is intraday:', isIntraday, 'Data length:', chartData.length);
 

@@ -120,6 +120,8 @@ export function PriceChartLightweight({
       })
       .sort((a, b) => a.time - b.time);
 
+    console.log('Lightweight Charts - Data points:', chartData.length, 'First time:', chartData[0]?.time, 'Last time:', chartData[chartData.length - 1]?.time);
+
     // Double-check chart still exists and is ready before adding series
     if (!chartRef.current || !isChartReadyRef.current) return;
 
@@ -147,9 +149,15 @@ export function PriceChartLightweight({
     // Determine if this is intraday data
     const isIntraday = chartData.length > 0 && chartData[0].time % 86400 !== 0;
 
+    console.log('Lightweight Charts - Is intraday:', isIntraday, 'Data length:', chartData.length);
+
     if (isIntraday) {
-      // For intraday data, fit content to show all data points
-      chartRef.current.timeScale().fitContent();
+      // For intraday data with lots of points, scroll to end instead of fitting
+      if (chartData.length > 1000) {
+        chartRef.current.timeScale().scrollToPosition(0, false);
+      } else {
+        chartRef.current.timeScale().fitContent();
+      }
     } else {
       // For daily data, scroll to the end to show most recent data
       chartRef.current.timeScale().scrollToPosition(0, false);

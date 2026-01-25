@@ -41,7 +41,7 @@ function calculateDateRange(interval: Interval): { from: string; to: string } {
 
   switch (interval) {
     case "1D":
-      from.setDate(to.getDate() - 1);
+      from.setDate(to.getDate() - 2); // Show 2 days of intraday data
       break;
     case "1W":
       from.setDate(to.getDate() - 7);

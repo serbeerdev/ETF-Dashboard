@@ -82,7 +82,7 @@ export function mapIntervalToParams(interval: Interval): {
   interval?: string;
 } {
   const intervalMap: Record<Interval, string> = {
-    "1D": "1m",
+    "1D": "5m",
     "1W": "1h",
     "1M": "1d",
     "3M": "1wk",

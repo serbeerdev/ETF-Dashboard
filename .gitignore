@@ -38,3 +38,6 @@ next-env.d.ts
 
 # turbo
 .turbo
+
+# playwright mcp screenshots
+.playwright-mcp/

@@ -30,23 +30,32 @@ export function MovingAverageSelector({
       variant="outline"
       className={className}
     >
-      {movingAverageOptions.map((option) => (
-        <ToggleGroupItem
-          key={option.value}
-          value={option.value}
-          aria-label={option.label}
-          className="px-3 data-[state=on]:border-current"
-          style={{
-            "--toggle-color": option.color,
-          } as React.CSSProperties}
-        >
-          <span
-            className="inline-block w-2 h-2 rounded-full mr-2"
-            style={{ backgroundColor: option.color }}
-          />
-          {option.label}
-        </ToggleGroupItem>
-      ))}
+      {movingAverageOptions.map((option) => {
+        const isSelected = value.includes(option.value);
+        return (
+          <ToggleGroupItem
+            key={option.value}
+            value={option.value}
+            aria-label={option.label}
+            className="px-3 relative"
+            style={
+              isSelected
+                ? {
+                    backgroundColor: `${option.color}20`,
+                    borderColor: option.color,
+                    borderWidth: "2px",
+                  }
+                : undefined
+            }
+          >
+            <span
+              className="inline-block w-2 h-2 rounded-full mr-2"
+              style={{ backgroundColor: option.color }}
+            />
+            {option.label}
+          </ToggleGroupItem>
+        );
+      })}
     </ToggleGroup>
   );
 }

@@ -28,9 +28,33 @@ export function PriceChart({
       .filter((quote) => quote.date && !isNaN(new Date(quote.date).getTime()))
       .map((quote) => {
         const dateObj = new Date(quote.date);
+        const isIntraday = quote.date.includes("T") || quote.date.includes(" ");
+
+        // Format date string based on whether it's intraday or daily data
+        let dateStr = "N/A";
+        if (!isNaN(dateObj.getTime())) {
+          if (isIntraday) {
+            // For intraday: show date and time
+            dateStr = dateObj.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+          } else {
+            // For daily: just show date
+            dateStr = dateObj.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            });
+          }
+        }
+
         return {
           date: dateObj,
-          dateStr: !isNaN(dateObj.getTime()) ? dateObj.toLocaleDateString() : 'N/A',
+          dateStr,
+          isIntraday,
           close: quote.close,
           open: quote.open,
           high: quote.high,
@@ -71,7 +95,22 @@ export function PriceChart({
               className="dark:stroke-gray-400"
               tickFormatter={(value) => {
                 if (value instanceof Date && !isNaN(value.getTime())) {
-                  return value.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+                  // Check if this is intraday data by looking at the first data point
+                  const isIntraday = chartData.length > 0 && chartData[0].isIntraday;
+
+                  if (isIntraday) {
+                    // For intraday: show time
+                    return value.toLocaleTimeString("en-US", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    });
+                  } else {
+                    // For daily: show date
+                    return value.toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    });
+                  }
                 }
                 return "";
               }}
@@ -106,7 +145,9 @@ function CustomTooltip({ active, payload }: TooltipProps<any, any>) {
 
   return (
     <div className="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg p-3 shadow-lg">
-      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{data.dateStr}</p>
+      <p className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+        {data.dateStr}
+      </p>
       <div className="mt-2 space-y-1">
         <div className="flex justify-between gap-4 text-sm">
           <span className="text-gray-500 dark:text-gray-400">Open:</span>
@@ -126,7 +167,13 @@ function CustomTooltip({ active, payload }: TooltipProps<any, any>) {
         </div>
         <div className="flex justify-between gap-4 text-sm">
           <span className="text-gray-500 dark:text-gray-400">Volume:</span>
-          <span className="font-medium text-gray-900 dark:text-gray-100">{(data.volume / 1000000).toFixed(2)}M</span>
+          <span className="font-medium text-gray-900 dark:text-gray-100">
+            {data.volume >= 1000000
+              ? `${(data.volume / 1000000).toFixed(2)}M`
+              : data.volume >= 1000
+              ? `${(data.volume / 1000).toFixed(2)}K`
+              : data.volume.toLocaleString()}
+          </span>
         </div>
       </div>
     </div>

@@ -59,6 +59,11 @@ export function PriceChartLightweight({
         borderColor: currentTheme === "dark" ? "#374151" : "#e5e7eb",
         timeVisible: true,
         secondsVisible: false,
+        rightOffset: 5,
+        barSpacing: 10,
+        minBarSpacing: 3,
+        fixLeftEdge: true,
+        fixRightEdge: true,
       },
     });
 
@@ -107,8 +112,9 @@ export function PriceChartLightweight({
       })
       .map((quote) => {
         const date = new Date(quote.date);
+        // Use Unix timestamp in seconds - works for both intraday and daily data
         return {
-          time: (date.getTime() / 1000) as any, // Unix timestamp in seconds
+          time: Math.floor(date.getTime() / 1000) as any,
           value: quote.close,
         };
       })
@@ -138,8 +144,16 @@ export function PriceChartLightweight({
     // Final check before operations
     if (!chartRef.current || !isChartReadyRef.current) return;
 
-    // Fit content
-    chartRef.current.timeScale().fitContent();
+    // Determine if this is intraday data
+    const isIntraday = chartData.length > 0 && chartData[0].time % 86400 !== 0;
+
+    if (isIntraday) {
+      // For intraday data, fit content to show all data points
+      chartRef.current.timeScale().fitContent();
+    } else {
+      // For daily data, scroll to the end to show most recent data
+      chartRef.current.timeScale().scrollToPosition(0, false);
+    }
 
     // Set price scale range
     chartRef.current.priceScale("right").applyOptions({

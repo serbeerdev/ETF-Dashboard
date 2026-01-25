@@ -28,33 +28,9 @@ export function PriceChart({
       .filter((quote) => quote.date && !isNaN(new Date(quote.date).getTime()))
       .map((quote) => {
         const dateObj = new Date(quote.date);
-        const isIntraday = quote.date.includes("T") || quote.date.includes(" ");
-
-        // Format date string based on whether it's intraday or daily data
-        let dateStr = "N/A";
-        if (!isNaN(dateObj.getTime())) {
-          if (isIntraday) {
-            // For intraday: show date and time
-            dateStr = dateObj.toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            });
-          } else {
-            // For daily: just show date
-            dateStr = dateObj.toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            });
-          }
-        }
 
         return {
           date: dateObj,
-          dateStr,
-          isIntraday,
           close: quote.close,
           open: quote.open,
           high: quote.high,
@@ -63,6 +39,17 @@ export function PriceChart({
         };
       });
   }, [data]);
+
+  // Detect if data is intraday by checking if timestamps vary within the same day
+  const isIntraday = chartData.length > 1 &&
+    chartData.some((point, idx) => {
+      if (idx === 0) return false;
+      const prevDate = chartData[idx - 1].date;
+      const currDate = point.date;
+      // Check if dates are on the same day but different times
+      return prevDate.toDateString() === currDate.toDateString() &&
+             prevDate.getTime() !== currDate.getTime();
+    });
 
   const minPrice = Math.min(...chartData.map((d) => d.low)) * 0.999;
   const maxPrice = Math.max(...chartData.map((d) => d.high)) * 1.001;
@@ -95,9 +82,6 @@ export function PriceChart({
               className="dark:stroke-gray-400"
               tickFormatter={(value) => {
                 if (value instanceof Date && !isNaN(value.getTime())) {
-                  // Check if this is intraday data by looking at the first data point
-                  const isIntraday = chartData.length > 0 && chartData[0].isIntraday;
-
                   if (isIntraday) {
                     // For intraday: show time
                     return value.toLocaleTimeString("en-US", {
@@ -122,7 +106,7 @@ export function PriceChart({
               className="dark:stroke-gray-400"
               tickFormatter={(value) => `$${value.toFixed(0)}`}
             />
-            <Tooltip content={<CustomTooltip />} cursor={{ stroke: "#3b82f6", strokeWidth: 1 }} />
+            <Tooltip content={<CustomTooltip isIntraday={isIntraday} />} cursor={{ stroke: "#3b82f6", strokeWidth: 1 }} />
             <Area
               type="monotone"
               dataKey="close"
@@ -138,15 +122,28 @@ export function PriceChart({
   );
 }
 
-function CustomTooltip({ active, payload }: TooltipProps<any, any>) {
+function CustomTooltip({ active, payload, isIntraday }: TooltipProps<any, any> & { isIntraday: boolean }) {
   if (!active || !payload || !payload.length) return null;
 
   const data = payload[0].payload;
 
+  // Format date based on whether it's intraday or daily
+  const dateStr = data.date instanceof Date && !isNaN(data.date.getTime())
+    ? data.date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        ...(isIntraday && {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      })
+    : "N/A";
+
   return (
     <div className="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg p-3 shadow-lg">
       <p className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
-        {data.dateStr}
+        {dateStr}
       </p>
       <div className="mt-2 space-y-1">
         <div className="flex justify-between gap-4 text-sm">

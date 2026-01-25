@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { PriceChart } from "@/components/chart/price-chart";
 import { PriceChartLightweight } from "@/components/chart/price-chart-lightweight";
 import { IntervalSelector, mapIntervalToParams } from "@/components/chart/interval-selector";
 import { useDailyHistory, useIntradayHistory } from "@/hooks/use-etf-data";
@@ -53,16 +52,7 @@ export function EtfChartSection({ symbol }: EtfChartSectionProps) {
         <IntervalSelector value={interval} onChange={setInterval} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div>
-          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Recharts</h3>
-          <PriceChart data={data} height={400} />
-        </div>
-        <div>
-          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Lightweight Charts</h3>
-          <PriceChartLightweight data={data} height={400} />
-        </div>
-      </div>
+      <PriceChartLightweight data={data} height={400} title="Price History" />
     </div>
   );
 }

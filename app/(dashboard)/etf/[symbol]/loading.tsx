@@ -36,18 +36,9 @@ export default function EtfPageLoading() {
           <Skeleton className="h-8 w-64" />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Recharts Skeleton */}
-          <div className="border rounded-lg p-4 bg-white dark:bg-gray-800 dark:border-gray-700">
-            <Skeleton className="h-4 w-24 mb-4" />
-            <Skeleton className="h-[400px] w-full" />
-          </div>
-
-          {/* Lightweight Charts Skeleton */}
-          <div className="border rounded-lg p-4 bg-white dark:bg-gray-800 dark:border-gray-700">
-            <Skeleton className="h-4 w-32 mb-4" />
-            <Skeleton className="h-[400px] w-full" />
-          </div>
+        <div className="border rounded-lg p-4 bg-white dark:bg-gray-800 dark:border-gray-700">
+          <Skeleton className="h-4 w-32 mb-4" />
+          <Skeleton className="h-[400px] w-full" />
         </div>
       </div>
 

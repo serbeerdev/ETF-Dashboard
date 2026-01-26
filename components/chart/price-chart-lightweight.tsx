@@ -173,7 +173,7 @@ export function PriceChartLightweight({
         borderColor: currentTheme === "dark" ? "#374151" : "#e5e7eb",
         timeVisible: true,
         secondsVisible: false,
-        rightOffset: 5,
+        rightOffset: 25,
         barSpacing: 10,
         minBarSpacing: 3,
         fixLeftEdge: true,
@@ -417,7 +417,7 @@ export function PriceChartLightweight({
             lineWidth: 2,
             priceLineVisible: false,
             lastValueVisible: true,
-            title: type.toUpperCase(),
+            title: "", // Ocultar título para no tapar el gráfico
           });
 
           maSeries.setData(validData);

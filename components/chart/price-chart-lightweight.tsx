@@ -184,6 +184,23 @@ export function PriceChartLightweight({
     chartRef.current = chart;
     isChartReadyRef.current = true;
 
+    // Hide TradingView logo
+    const hideTradingViewLogo = () => {
+      const logoElement = document.getElementById('tv-attr-logo');
+      if (logoElement) {
+        logoElement.setAttribute('hidden', 'true');
+      }
+    };
+
+    // Try to hide immediately and also on interval
+    hideTradingViewLogo();
+    const logoCheckInterval = setInterval(hideTradingViewLogo, 100);
+
+    // Stop checking after 2 seconds
+    setTimeout(() => {
+      clearInterval(logoCheckInterval);
+    }, 2000);
+
     // Handle resize
     const handleResize = () => {
       if (chartContainerRef.current && chartRef.current) {
@@ -198,6 +215,7 @@ export function PriceChartLightweight({
     return () => {
       isChartReadyRef.current = false;
       window.removeEventListener("resize", handleResize);
+      clearInterval(logoCheckInterval);
       maSeriesRef.current.clear();
       chart.remove();
     };

@@ -110,6 +110,7 @@ export function SparklineChart({ data, height = 60, width }: SparklineChartProps
   return (
     <div
       ref={chartContainerRef}
+      className="chart-container"
       style={{ height: `${height}px`, width: width ? `${width}px` : "100%" }}
     />
   );

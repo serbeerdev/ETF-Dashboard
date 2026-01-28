@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Hide TradingView logo links in chart containers */
+.chart-container a {
+  display: none !important;
+}
+
 /* Light mode (default) */
 body {
   background-color: #f9fafb !important;

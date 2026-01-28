@@ -441,7 +441,7 @@ export function PriceChartLightweight({
         </CardHeader>
       )}
       <CardContent>
-        <div ref={chartContainerRef} style={{ height: `${height}px` }} />
+        <div ref={chartContainerRef} className="chart-container" style={{ height: `${height}px` }} />
       </CardContent>
     </Card>
   );

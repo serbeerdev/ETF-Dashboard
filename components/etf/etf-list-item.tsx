@@ -27,17 +27,20 @@ export function EtfListItem({ etf }: { etf: EtfQuote }) {
           <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{transformed.name}</p>
         </div>
 
-        {/* Price */}
+        {/* Price and Day Range */}
         <div className="flex-shrink-0 text-right">
           <div className="font-bold text-lg">${transformed.price.toFixed(2)}</div>
           <div className={`text-sm font-medium ${transformed.change >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
             {transformed.change >= 0 ? "+" : ""}{transformed.changePercent.toFixed(2)}%
           </div>
+          <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            {transformed.dayLow.toFixed(2)} - {transformed.dayHigh.toFixed(2)}
+          </div>
         </div>
 
-        {/* Sparkline */}
+        {/* Day Sparkline */}
         {sparklineData && (
-          <div className="flex-shrink-0 w-32">
+          <div className="flex-shrink-0 w-24">
             <SparklineChart data={sparklineData} height={40} />
           </div>
         )}

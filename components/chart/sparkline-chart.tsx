@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import { createChart, LineSeries, type IChartApi, type ISeriesApi } from "lightweight-charts";
 import type { SparklineData } from "@/types/etf.types";
 import { useTheme } from "next-themes";
@@ -18,19 +18,25 @@ export function SparklineChart({ data, height = 60, width }: SparklineChartProps
   const { theme, systemTheme } = useTheme();
   const currentTheme = theme === "system" ? systemTheme : theme;
 
-  // Transform data to lightweight-charts format
-  const chartData = data.data.map((point) => ({
-    time: point.t,
-    value: point.p,
-  }));
+  // Transform data to lightweight-charts format (memoized)
+  const chartData = useMemo(() =>
+    data.data.map((point) => ({
+      time: point.t,
+      value: point.p,
+    })),
+    [data]
+  );
 
-  // Calculate color based on trend (first vs last point)
-  const firstPoint = chartData[0];
-  const lastPoint = chartData[chartData.length - 1];
-  const isPositive = lastPoint.value >= firstPoint.value;
-  const lineColor = isPositive
-    ? (currentTheme === "dark" ? "#22c55e" : "#16a34a") // Green
-    : (currentTheme === "dark" ? "#ef4444" : "#dc2626"); // Red
+  // Calculate color based on trend (first vs last point) (memoized)
+  const lineColor = useMemo(() => {
+    if (chartData.length === 0) return "#16a34a";
+    const firstPoint = chartData[0];
+    const lastPoint = chartData[chartData.length - 1];
+    const isPositive = lastPoint.value >= firstPoint.value;
+    return isPositive
+      ? (currentTheme === "dark" ? "#22c55e" : "#16a34a") // Green
+      : (currentTheme === "dark" ? "#ef4444" : "#dc2626"); // Red
+  }, [chartData, currentTheme]);
 
   useEffect(() => {
     if (!chartContainerRef.current || chartData.length === 0) return;
@@ -98,14 +104,7 @@ export function SparklineChart({ data, height = 60, width }: SparklineChartProps
       }
       chart.remove();
     };
-  }, []); // Only run on mount/unmount
-
-  // Update data when it changes
-  useEffect(() => {
-    if (seriesRef.current && chartData.length > 0) {
-      seriesRef.current.setData(chartData);
-    }
-  }, [chartData, lineColor]);
+  }, [chartData, lineColor, height, width]); // Re-create when data or color changes
 
   return (
     <div

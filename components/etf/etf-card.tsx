@@ -36,6 +36,21 @@ export function EtfCard({ etf }: { etf: EtfQuote }) {
             <span>•</span>
             <span>Vol: {(transformed.volume / 1000000).toFixed(2)}M</span>
           </div>
+
+          {/* Day Info */}
+          <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 space-y-1 text-sm">
+            <div className="flex justify-between">
+              <span className="text-gray-500 dark:text-gray-400">Apertura:</span>
+              <span className="font-medium">${transformed.open.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-500 dark:text-gray-400">Rango:</span>
+              <span className="font-medium">
+                {transformed.dayLow.toFixed(2)} - {transformed.dayHigh.toFixed(2)}
+              </span>
+            </div>
+          </div>
+
           {sparklineData && (
             <div className="mt-3">
               <SparklineChart data={sparklineData} height={50} />

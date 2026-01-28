@@ -3,11 +3,17 @@
 import Link from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { PriceBadge } from "@/components/etf/price-badge";
+import { SparklineChart } from "@/components/chart/sparkline-chart";
 import { transformQuote } from "@/lib/utils";
+import { useSparkline } from "@/hooks/use-etf-data";
 import type { EtfQuote } from "@/types/etf.types";
 
 export function EtfCard({ etf }: { etf: EtfQuote }) {
   const transformed = transformQuote(etf);
+  const { data: sparklineData } = useSparkline(etf.symbol, {
+    period: "1m",
+    points: 30,
+  });
 
   return (
     <Link href={`/etf/${etf.symbol}`}>
@@ -30,6 +36,11 @@ export function EtfCard({ etf }: { etf: EtfQuote }) {
             <span>•</span>
             <span>Vol: {(transformed.volume / 1000000).toFixed(2)}M</span>
           </div>
+          {sparklineData && (
+            <div className="mt-3">
+              <SparklineChart data={sparklineData} height={50} />
+            </div>
+          )}
         </CardContent>
       </Card>
     </Link>

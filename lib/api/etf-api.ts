@@ -10,6 +10,7 @@ import type {
   Recommendation,
   Dividend,
   FullReport,
+  SparklineData,
 } from "@/types/etf.types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
@@ -123,6 +124,18 @@ class EtfApiService {
   // Full Report
   async getFullReport(symbol: string): Promise<FullReport> {
     return this.fetch<FullReport>(`/etf/${symbol}/report`);
+  }
+
+  // Sparkline for mini charts
+  async getSparkline(
+    symbol: string,
+    params?: {
+      period?: string;
+      points?: number;
+    }
+  ): Promise<SparklineData> {
+    const queryString = params ? `?${new URLSearchParams(params as Record<string, string>)}` : "";
+    return this.fetch<SparklineData>(`/etf/${symbol}/sparkline${queryString}`);
   }
 }
 

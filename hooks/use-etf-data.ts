@@ -8,6 +8,7 @@ import type {
   Insights,
   NewsArticle,
   Recommendation,
+  SparklineData,
 } from "@/types/etf.types";
 
 // Query keys factory
@@ -28,6 +29,8 @@ export const etfQueryKeys = {
   news: (symbol: string) => ["etf", "news", symbol] as const,
   report: (symbol: string) => ["etf", "report", symbol] as const,
   featured: () => ["etf", "featured"] as const,
+  sparkline: (symbol: string, params?: any) =>
+    ["etf", "sparkline", symbol, params] as const,
 };
 
 // Hook: Featured ETFs
@@ -138,5 +141,22 @@ export function useRecommendations(symbol: string) {
     queryFn: () => etfApi.getRecommendations(symbol),
     enabled: !!symbol,
     staleTime: 24 * 60 * 60 * 1000, // 24 hours
+  });
+}
+
+// Hook: Sparkline
+export function useSparkline(
+  symbol: string,
+  params?: {
+    period?: string;
+    points?: number;
+  }
+) {
+  return useQuery({
+    queryKey: etfQueryKeys.sparkline(symbol, params),
+    queryFn: () => etfApi.getSparkline(symbol, params),
+    enabled: !!symbol,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchInterval: 5 * 60 * 1000, // 5 minutes
   });
 }

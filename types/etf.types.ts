@@ -186,6 +186,19 @@ export interface FullReport {
   recommendations: Recommendation[];
 }
 
+// Sparkline data point for mini charts
+export interface SparklinePoint {
+  t: number; // Unix timestamp in seconds
+  p: number; // Price
+}
+
+// Sparkline response
+export interface SparklineData {
+  symbol: string;
+  period: string;
+  data: SparklinePoint[];
+}
+
 // ETF Price extended
 export interface EtfPrice extends EtfQuote {
   lastPrice?: number;

@@ -1,16 +1,27 @@
 import { etfApi } from "@/lib/api/etf-api";
 import { EtfCard } from "@/components/etf/etf-card";
+import { EtfListItem } from "@/components/etf/etf-list-item";
 
 async function FeaturedEtfs() {
   try {
     const etfs = await etfApi.getFeaturedEtfs();
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {etfs.map((etf) => (
-          <EtfCard key={etf.symbol} etf={etf} />
-        ))}
-      </div>
+      <>
+        {/* Mobile: List view */}
+        <div className="md:hidden space-y-2">
+          {etfs.map((etf) => (
+            <EtfListItem key={etf.symbol} etf={etf} />
+          ))}
+        </div>
+
+        {/* Tablet and Desktop: Grid view */}
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {etfs.map((etf) => (
+            <EtfCard key={etf.symbol} etf={etf} />
+          ))}
+        </div>
+      </>
     );
   } catch (error) {
     return (

@@ -49,6 +49,14 @@ export function EtfCard({ etf }: { etf: EtfQuote }) {
                 {transformed.dayLow.toFixed(2)} - {transformed.dayHigh.toFixed(2)}
               </span>
             </div>
+            {sparklineData && sparklineData.data.length > 0 && (
+              <div className="flex justify-between">
+                <span className="text-gray-500 dark:text-gray-400">1 Mes:</span>
+                <span className="font-medium">
+                  ${sparklineData.data[0].p.toFixed(2)} → ${sparklineData.data[sparklineData.data.length - 1].p.toFixed(2)}
+                </span>
+              </div>
+            )}
           </div>
 
           {sparklineData && (

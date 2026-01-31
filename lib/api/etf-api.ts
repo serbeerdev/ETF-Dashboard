@@ -19,7 +19,7 @@ class EtfApiService {
   private backendUrl: string;
 
   constructor() {
-    this.backendUrl = API_BASE_URL;
+    this.backendUrl = API_BASE_URL; 
   }
 
   private async fetch<T>(endpoint: string): Promise<T> {
@@ -35,7 +35,7 @@ class EtfApiService {
       // Client component: use Next.js API routes as proxy (avoid CORS)
       url = `/api${endpoint}`;
     }
-
+  console.log(url)
     try {
       const response = await fetch(url, {
         headers: {

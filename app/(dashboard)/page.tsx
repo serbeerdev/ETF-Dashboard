@@ -28,7 +28,7 @@ async function FeaturedEtfs() {
       <div className="p-8 text-center border rounded-lg bg-red-50 dark:bg-red-900/20">
         <p className="text-red-900 dark:text-red-100 font-medium">Failed to load featured ETFs</p>
         <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-          Make sure the FetchETF backend is running at http://localhost:3000
+          Make sure the FetchETF backend is running at `${process.env.NEXT_PUBLIC_API_URL}` 
         </p>
       </div>
     );

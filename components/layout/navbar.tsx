@@ -41,9 +41,9 @@ export function Navbar() {
           <Link href="/" className="text-sm font-medium hover:underline">
             Discover
           </Link>
-          <Link href="/compare" className="text-sm font-medium hover:underline">
+          {/* <Link href="/compare" className="text-sm font-medium hover:underline">
             Compare
-          </Link>
+          </Link> */}
           <ThemeToggle />
         </div>
       </div>
